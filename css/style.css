@@ -1,0 +1,6 @@
+/* Style interface */
+.mx-map_wrap{
+	position: relative;
+	display: table;
+	border: 1px solid #ddd;
+}
