@@ -1,20 +1,34 @@
 var e,
+	point,
 	pointPosX,
-	pointPosY;
+	pointPosY,
+	pointX,
+	pointY,
+	correctPosition = 7,
+	mapField = document.getElementById( 'mapField' );
+
 /* -------------------------------- begin view -------------------------------------------- */
 
 var view = {	
 
-	getFielfMap: function( pointX, pointY ){	
+	getFieldMap: function( pointX, pointY ){	
+			
+		var inputX = document.getElementById( 'coordinates_x' ),
+		inputY = document.getElementById( 'coordinates_y' );
+
+		inputX.value = pointX;
+		inputY.value = pointY;
+
+	},
+
+	// place a button on the map
+	setPointInMap: function( pointX, pointY ){
 		
-		var mapField = document.getElementById( 'mapField' ),
-			inputX = document.getElementById( 'coordinates_x' ),
-			inputY = document.getElementById( 'coordinates_y' );
+		var pointInMap = document.getElementById( 'mxPoint' ),
+			pointInMapX = pointInMap.style.left = pointX - correctPosition + 'px',
+			pointInMapY = pointInMap.style.top = pointY - correctPosition + 'px';
 
-			inputX.value = pointX;
-			inputY.value = pointY;
-
-	}	
+	}
 
 };
 
@@ -25,26 +39,14 @@ var view = {
 
 var model = {
 
-	pointPosX: 0,
-	pointPosY: 0,
+	getPositionPoint: function( mxMap, event ){
 
-	eventVar: function(){
+		var blockMap = mxMap.getBoundingClientRect();
 
-		e = window.event;
-
-	},
-	getPositionPointX: function(){
-
-		this.eventVar();
-		this.pointPosX = e.clientX;	
-		return this.pointPosX;
-
-	},
-	getPositionPointY: function(){
-
-		this.eventVar();
-		this.pointPosY = e.clientY;
-		return this.pointPosY;
+		return{
+			pointPosX: ( event.clientX - blockMap.left ),
+			pointPosY: ( event.clientY - blockMap.top )
+		};
 
 	}
 	
@@ -59,19 +61,31 @@ var controller = {
 
 	getCoordinatesPoint: function(){
 
-		var pointX = model.getPositionPointX(),
-			pointY = model.getPositionPointY();
+		point = model.getPositionPoint( mapField, event );
 
-		view.getFielfMap( pointX, pointY );
+		pointX = point.pointPosX;
+		pointY = point.pointPosY;
+		view.getFieldMap( pointX, pointY );
 
-	}	
+	},
+
+	// place a button on the map (CONTR)
+	setCoordinatesPointInMap: function(){
+		
+		point = model.getPositionPoint( mapField, event );
+
+		pointX = point.pointPosX;
+		pointY = point.pointPosY;
+
+		view.setPointInMap( pointX, pointY );
+	}
 
 };
 
 /* ---------------------------- end controller ----------------------------------------- */
 
 
-/* -------------------- anonymous initialize function------------------------------------ */
+/* -------------------- anonymous initialize function ------------------------------------ */
 
 ( function(){
 
@@ -95,6 +109,7 @@ var controller = {
 			mapField.onclick = function(){
 
 				controller.getCoordinatesPoint();
+				controller.setCoordinatesPointInMap();
 				
 			}
 
@@ -104,4 +119,5 @@ var controller = {
 	start.init();
 
 } )();
-/* -------------------- anonymous initialize function------------------------------------ */
+
+/* -------------------- anonymous initialize function ------------------------------------ */

@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Points on the map</title>
-	<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-	<div class="mx-map_wrap" id="mapField">
-		<img src="maps/map1.jpg" alt="">
-	</div>
-
-	<form action="/">
-		<div class="mx-points_wrap">
-			<div class="mx-point_1">
-				<div>
-					<span>Name Point</span>
-					<input type="text" id="name_point" value="" disabled>
-				</div>
-				<div>
-					<span>X</span>
-					<input type="text" id="coordinates_x" value="" disabled>
-				</div>
-				<div>
-					<span>Y</span>
-					<input type="text" id="coordinates_y" value="" disabled>
-				</div>
-			</div>
-			<!--  -->
+	<head>
+		<meta charset="UTF-8">
+		<title>Points on the map</title>
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+	
+		<div class="mx-map_wrap" id="mapField">
+			<img src="maps/map1.jpg" alt="">
+			<div class="mx-point" id="mxPoint"></div>
 		</div>
-		
-		<input type="submit" value="Отправить">
-		
-	</form>
 
-<script src="PointsMap.js"></script>
-</body>
+		<form action="/">
+			<div class="mx-points_wrap">
+				<div class="mx-point_1">
+					<div>
+						<span>Name Point</span>
+						<input type="text" id="name_point" value="" disabled>
+					</div>
+					<div>
+						<span>X</span>
+						<input type="text" id="coordinates_x" value="" disabled>
+					</div>
+					<div>
+						<span>Y</span>
+						<input type="text" id="coordinates_y" value="" disabled>
+					</div>
+				</div>
+				<!--  -->
+			</div>
+			
+			<input type="submit" value="Отправить">
+			
+		</form>
+
+		<script src="PointsMap.js"></script>
+
+	</body>
 </html>
