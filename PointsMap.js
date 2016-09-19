@@ -1,33 +1,27 @@
-var e,
-	point,
-	pointPosX,
-	pointPosY,
-	pointX,
-	pointY,
-	correctPosition = 7,
-	arrayPointers = [],
-	createNewId,
-	saveId,
-	newPoint,
-	newPointId,
-	newPointPosX,
-	newPointPosY,
-	enterSave = document.getElementById( 'mxSave' ),
-	mapField = document.getElementById( 'mapField' ),
-	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' ),
-	canceSave = document.getElementById( 'mxNoSave' );
+var mapField = document.getElementById( 'mapField' ),
+	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' );
+
+
+/* -------------------------------- begin add methods ------------------------------------- */
+
+var addMethods = {	
+	arrayPointers: [],
+	correctPosition: 7
+}
+
+/* -------------------------------- end add methods ------------------------------------- */
+
 
 /* -------------------------------- begin view -------------------------------------------- */
 
 var view = {
 
-	getFieldMap: function( pointX, pointY ){	
+	getFieldMap: function( pointX, pointY, pointId ){	
 			
 		var inputX = document.getElementById( 'coordinates_x' ),
-		inputY = document.getElementById( 'coordinates_y' );
-
-		inputX.value = pointX;
-		inputY.value = pointY;
+			inputY = document.getElementById( 'coordinates_y' );
+			inputX.value = pointX;
+			inputY.value = pointY;
 
 	},
 
@@ -35,8 +29,8 @@ var view = {
 	setPointInMap: function( pointX, pointY ){
 		
 		var pointInMap = document.getElementById( 'mxPoint' ),
-			pointInMapX = pointInMap.style.left = pointX - correctPosition + 'px',
-			pointInMapY = pointInMap.style.top = pointY - correctPosition + 'px';
+			pointInMapX = pointInMap.style.left = pointX - addMethods.correctPosition + 'px',
+			pointInMapY = pointInMap.style.top = pointY - addMethods.correctPosition + 'px';
 
 	},
 
@@ -53,11 +47,11 @@ var view = {
 	// Create new points
 	createNewPoint: function( newPointId, newPointPosX, newPointPosY ){
 
-		newPoint = document.createElement( 'div' );
+		var newPoint = document.createElement( 'div' );
 		newPoint.setAttribute( 'class', 'mx-point' );
 		newPoint.setAttribute( 'id', newPointId );
-		newPoint.style.left = newPointPosX - correctPosition + 'px';
-		newPoint.style.top = newPointPosY - correctPosition + 'px';
+		newPoint.style.left = newPointPosX - addMethods.correctPosition + 'px';
+		newPoint.style.top = newPointPosY - addMethods.correctPosition + 'px';
 		mapField.appendChild( newPoint );
 
 	},
@@ -68,8 +62,12 @@ var view = {
 		// hidden popup
 		mxPopupSave[0].style.display = 'none';
 
+		// hidden point	
+		var	Point = document.getElementById( 'mxPoint' );
+		Point.style.left = '-100px';
+
 		// remove from the array
-		arrayPointers.pop();
+		addMethods.arrayPointers.pop();
 
 	}
 
@@ -97,7 +95,7 @@ var model = {
 	// Create id
 	createIdFromPoint: function(){
 
-		var numberId = arrayPointers.length;
+		var numberId = addMethods.arrayPointers.length;
 			
 		return{				
 			saveId: ('mxPoint' + numberId)
@@ -110,7 +108,7 @@ var model = {
 
 		var setArray = [saveId, saveX, saveY];
 
-		arrayPointers.push(setArray);		
+		addMethods.arrayPointers.push(setArray);		
 
 	}
 	
@@ -129,7 +127,8 @@ var controller = {
 
 		pointX = point.pointPosX;
 		pointY = point.pointPosY;
-		view.getFieldMap( pointX, pointY );
+		pointId = '111';
+		view.getFieldMap( pointX, pointY, pointId );
 
 	},
 
@@ -155,6 +154,7 @@ var controller = {
 		point = model.getPositionPoint( mapField, event );
 		saveX = point.pointPosX;
 		saveY = point.pointPosY;
+
 		createNewId = model.createIdFromPoint();
 		saveId = createNewId.saveId;
 		model.pushCoordinatesInArray( saveId, saveX, saveY );
@@ -164,12 +164,12 @@ var controller = {
 	// attachment points
 	attachmentPoints: function(){
 
-		var getNumberFromArray = arrayPointers.length;
+		var getNumberFromArray = addMethods.arrayPointers.length;
 		getNumberFromArray -= 1;
 
-		newPointId = arrayPointers[getNumberFromArray][0];
-		newPointPosX = arrayPointers[getNumberFromArray][1];
-		newPointPosY = arrayPointers[getNumberFromArray][2];
+		newPointId = addMethods.arrayPointers[getNumberFromArray][0];
+		newPointPosX = addMethods.arrayPointers[getNumberFromArray][1];
+		newPointPosY = addMethods.arrayPointers[getNumberFromArray][2];
 
 		view.createNewPoint( newPointId, newPointPosX, newPointPosY );
 
@@ -183,57 +183,34 @@ var controller = {
 /* ---------------------------- end controller ----------------------------------------- */
 
 
-/* -------------------- anonymous initialize function ------------------------------------ */
+function start(){
+	
+	// click on field
+	mapField.onclick = function(){
 
-( function(){
+		controller.getCoordinatesPoint();
+		controller.setCoordinatesPointInMap();
 
-	var start = {
+		// get and push Coordinates In Array Contr
+		controller.getAndPushCoordinates();	
+		
+	};			
 
-		init: function(){
+	// Save and create point
+	var enterSave = document.getElementById( 'mxSave' );
+	enterSave.onclick = function(){
 
-			this.main();
-			this.control();
-			this.event();
+		controller.attachmentPoints();
 
-		},
-		main: function(){
-			//options
-		},
-		control: function(){
-			//controllers
-		},
-		event: function(){
-
-			// click on field
-			mapField.onclick = function(){
-
-				controller.getCoordinatesPoint();
-				controller.setCoordinatesPointInMap();
-
-				// get and push Coordinates In Array Contr
-				controller.getAndPushCoordinates();	
-				
-			};			
-
-			// Save and create point
-			enterSave.onclick = function(){
-
-				controller.attachmentPoints();
-
-			};
-
-			// Cance save
-			canceSave.onclick = function(){
-
-				view.canceSavePoint();
-				
-			}	
-
-		}
 	};
 
-	start.init();
+	// Cance save	
+	var canceSave = document.getElementById( 'mxNoSave' );
+	canceSave.onclick = function(){
 
-} )();
+		view.canceSavePoint();
+		
+	};
+}
 
-/* -------------------- anonymous initialize function ------------------------------------ */
+start();
