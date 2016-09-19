@@ -1,5 +1,6 @@
 var mapField = document.getElementById( 'mapField' ),
-	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' );
+	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' ),
+	mxTextSave = document.getElementById( 'MxTextSave' );
 
 
 /* -------------------------------- begin add methods ------------------------------------- */
@@ -45,13 +46,19 @@ var view = {
 	},
 
 	// Create new points
-	createNewPoint: function( newPointId, newPointPosX, newPointPosY ){
+	createNewPoint: function( newPointId, newPointPosX, newPointPosY, newPointDesription ){
 
 		var newPoint = document.createElement( 'div' );
 		newPoint.setAttribute( 'class', 'mx-point' );
 		newPoint.setAttribute( 'id', newPointId );
 		newPoint.style.left = newPointPosX - addMethods.correctPosition + 'px';
 		newPoint.style.top = newPointPosY - addMethods.correctPosition + 'px';
+
+		//create title
+		var titlePoint = document.createAttribute( 'title' );
+		titlePoint.value = newPointDesription;
+		newPoint.setAttributeNode( titlePoint );
+
 		mapField.appendChild( newPoint );
 
 	},
@@ -103,10 +110,10 @@ var model = {
 
 	},
 
-	// push Coordinates In Array
-	pushCoordinatesInArray: function( saveId, saveX, saveY ){
+	// Push Coordinates In Array
+	pushCoordinatesInArray: function( saveId, saveX, saveY, descriptionPoint ){
 
-		var setArray = [saveId, saveX, saveY];
+		var setArray = [saveId, saveX, saveY, descriptionPoint];
 
 		addMethods.arrayPointers.push(setArray);		
 
@@ -148,7 +155,7 @@ var controller = {
 
 	},
 
-	// push Coordinates In Array Contr
+	// Push Coordinates In Array Contr
 	getAndPushCoordinates: function(){
 
 		point = model.getPositionPoint( mapField, event );
@@ -157,21 +164,31 @@ var controller = {
 
 		createNewId = model.createIdFromPoint();
 		saveId = createNewId.saveId;
-		model.pushCoordinatesInArray( saveId, saveX, saveY );
+		descriptionPoint = '';
+	
+		model.pushCoordinatesInArray( saveId, saveX, saveY, descriptionPoint );
 
 	},
 
-	// attachment points
+	// Attachment points
 	attachmentPoints: function(){
 
 		var getNumberFromArray = addMethods.arrayPointers.length;
 		getNumberFromArray -= 1;
 
+		// push description in array
+		if( mxTextSave.value == '' ){
+			mxTextSave.value = 'Нет описания';
+		}
+		addMethods.arrayPointers[getNumberFromArray][3] = mxTextSave.value;
+
+		// get from array and set in element attribute
 		newPointId = addMethods.arrayPointers[getNumberFromArray][0];
 		newPointPosX = addMethods.arrayPointers[getNumberFromArray][1];
 		newPointPosY = addMethods.arrayPointers[getNumberFromArray][2];
+		newPointDesription = addMethods.arrayPointers[getNumberFromArray][3];
 
-		view.createNewPoint( newPointId, newPointPosX, newPointPosY );
+		view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
 
 		// hidden popup
 		mxPopupSave[0].style.display = 'none';
@@ -185,7 +202,7 @@ var controller = {
 
 function start(){
 	
-	// click on field
+	// Click on field
 	mapField.onclick = function(){
 
 		controller.getCoordinatesPoint();
@@ -200,17 +217,45 @@ function start(){
 	var enterSave = document.getElementById( 'mxSave' );
 	enterSave.onclick = function(){
 
-		controller.attachmentPoints();
+		controller.attachmentPoints();		
+
+		// clean tetxtarea
+		mxTextSave.value = '';
 
 	};
+
+	// Enter press
+	document.onkeydown = function(e){
+
+		var keyC = e.keyCode,
+			mxPopupSaveDisplay = getComputedStyle(mxPopupSave[0], null).getPropertyValue( 'display' );
+
+		if( mxPopupSaveDisplay === 'block' ){
+
+			if( keyC === 13 ){
+
+				controller.attachmentPoints();		
+
+				// clean tetxtarea
+				mxTextSave.value = '';
+
+			}
+
+		}		
+
+	}
 
 	// Cance save	
 	var canceSave = document.getElementById( 'mxNoSave' );
 	canceSave.onclick = function(){
 
 		view.canceSavePoint();
+
+		// clean tetxtarea
+		mxTextSave.value = '';
 		
 	};
+
 }
 
 start();
