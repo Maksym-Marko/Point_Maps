@@ -78,3 +78,23 @@ textarea#MxTextSave {
     width: 290px;
     max-width: 294px;
 }
+
+/* Save JSON */
+#mxSaveJSON{
+	width: 90px;
+	text-align: center;
+	display: none;
+	background-color: green;
+	padding: 10px;
+	border: none;
+	color: #fff;
+	margin: 20px auto;
+	cursor: pointer;
+}
+#mxSaveJSON:hover{
+	background-color: #333;
+}
+.mx-form_create_json{
+	display: block;
+	margin-top: 20px;
+}

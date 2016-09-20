@@ -8,7 +8,9 @@ var mapField = document.getElementById( 'mapField' ),
 var addMethods = {	
 	arrayPointers: [],
 	correctPosition: 7
-}
+};
+
+var JSONData = {};
 
 /* -------------------------------- end add methods ------------------------------------- */
 
@@ -76,7 +78,14 @@ var view = {
 		// remove from the array
 		addMethods.arrayPointers.pop();
 
+	},
+
+	// Hidden popup show save button
+	hidePopupShowSaveButton: function(){
+		mxPopupSave[0].style.display = 'none';
+		document.getElementById( 'mxSaveJSON' ).style.display = 'block';
 	}
+	
 
 };
 
@@ -117,6 +126,27 @@ var model = {
 
 		addMethods.arrayPointers.push(setArray);		
 
+	},
+
+	// Save in JSON
+	dataPointsJSON: function(){
+
+		var arrayPointersData = addMethods.arrayPointers;
+
+		for( var i = 0; i < arrayPointersData.length; i++ ){
+
+			idPoint = arrayPointersData[i][0];
+			PosXPoint = arrayPointersData[i][1];
+			PosYPoint = arrayPointersData[i][2];
+			DesriptionPoint = arrayPointersData[i][3];
+
+			dataPointId = 'dataPointId' + i;
+			JSONData[dataPointId] = { 'id': idPoint, 'PosX': PosXPoint, 'PosY': PosYPoint, 'Desription': DesriptionPoint };
+		}
+
+		var inputJSONData = document.getElementById( 'mxJSONData' );
+			inputJSONData.value = JSON.stringify(JSONData);
+
 	}
 	
 };
@@ -134,8 +164,7 @@ var controller = {
 
 		pointX = point.pointPosX;
 		pointY = point.pointPosY;
-		pointId = '111';
-		view.getFieldMap( pointX, pointY, pointId );
+		view.getFieldMap( pointX, pointY );
 
 	},
 
@@ -191,7 +220,7 @@ var controller = {
 		view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
 
 		// hidden popup
-		mxPopupSave[0].style.display = 'none';
+		view.hidePopupShowSaveButton();
 
 	}
 
@@ -255,6 +284,12 @@ function start(){
 		mxTextSave.value = '';
 		
 	};
+
+	// Create JSON file
+	var createJSON = document.getElementById( 'mxSaveJSON' );
+	createJSON.onclick = function(){
+		model.dataPointsJSON();
+	}
 
 }
 
