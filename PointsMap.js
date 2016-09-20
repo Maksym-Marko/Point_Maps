@@ -2,7 +2,6 @@ var mapField = document.getElementById( 'mapField' ),
 	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' ),
 	mxTextSave = document.getElementById( 'MxTextSave' );
 
-
 /* -------------------------------- begin add methods ------------------------------------- */
 
 var addMethods = {	
@@ -23,6 +22,7 @@ var view = {
 			
 		var inputX = document.getElementById( 'coordinates_x' ),
 			inputY = document.getElementById( 'coordinates_y' );
+
 			inputX.value = pointX;
 			inputY.value = pointY;
 
@@ -58,6 +58,7 @@ var view = {
 
 		//create title
 		var titlePoint = document.createAttribute( 'title' );
+
 		titlePoint.value = newPointDesription;
 		newPoint.setAttributeNode( titlePoint );
 
@@ -84,8 +85,33 @@ var view = {
 	hidePopupShowSaveButton: function(){
 		mxPopupSave[0].style.display = 'none';
 		document.getElementById( 'mxSaveJSON' ).style.display = 'block';
-	}
-	
+	},
+
+	// Show form and scroll to bottom
+	showFormAndScrollBottom: function(){
+
+		formCreateJSON = document.getElementById( 'mx-form_create_json' );
+		heightBody = document.body.scrollHeight;
+
+		formCreateJSON.style.display = 'block';
+		document.body.scrollTop = heightBody + 100;
+
+	},
+
+	// Clean tetxtarea
+	clearTextArea: function(){
+		
+		mxTextSave.value = '';
+
+	},
+
+	// Reset JSON form
+	resetFormJSON: function(){
+
+		formCreateJSON = document.getElementById( 'mx-form_create_json' );
+		formCreateJSON.style.display = 'none';
+
+	}		
 
 };
 
@@ -108,7 +134,7 @@ var model = {
 
 	},
 
-	// Create id
+	// Create id for point
 	createIdFromPoint: function(){
 
 		var numberId = addMethods.arrayPointers.length;
@@ -217,17 +243,20 @@ var controller = {
 		newPointPosY = addMethods.arrayPointers[getNumberFromArray][2];
 		newPointDesription = addMethods.arrayPointers[getNumberFromArray][3];
 
+		// create point
 		view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
 
 		// hidden popup
 		view.hidePopupShowSaveButton();
+
+		// clear textarea
+		view.clearTextArea();
 
 	}
 
 };
 
 /* ---------------------------- end controller ----------------------------------------- */
-
 
 function start(){
 	
@@ -246,10 +275,7 @@ function start(){
 	var enterSave = document.getElementById( 'mxSave' );
 	enterSave.onclick = function(){
 
-		controller.attachmentPoints();		
-
-		// clean tetxtarea
-		mxTextSave.value = '';
+		controller.attachmentPoints();	
 
 	};
 
@@ -263,16 +289,13 @@ function start(){
 
 			if( keyC === 13 ){
 
-				controller.attachmentPoints();		
-
-				// clean tetxtarea
-				mxTextSave.value = '';
+				controller.attachmentPoints();
 
 			}
 
 		}		
 
-	}
+	};
 
 	// Cance save	
 	var canceSave = document.getElementById( 'mxNoSave' );
@@ -281,15 +304,31 @@ function start(){
 		view.canceSavePoint();
 
 		// clean tetxtarea
-		mxTextSave.value = '';
+		view.clearTextArea();
 		
 	};
 
-	// Create JSON file
-	var createJSON = document.getElementById( 'mxSaveJSON' );
-	createJSON.onclick = function(){
-		model.dataPointsJSON();
-	}
+	// JSON		
+		var createJSON = document.getElementById( 'mxSaveJSON' ),
+			resetJSON = document.getElementById( 'mxResetJSON' );
+
+		// create JSON data
+		createJSON.onclick = function(){
+
+			// create data
+			model.dataPointsJSON();
+
+			// show form
+			view.showFormAndScrollBottom();
+
+		};
+
+		// reset form		
+		resetJSON.onclick = function(){
+
+			view.resetFormJSON();
+
+		};
 
 }
 

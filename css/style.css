@@ -94,7 +94,9 @@ textarea#MxTextSave {
 #mxSaveJSON:hover{
 	background-color: #333;
 }
-.mx-form_create_json{
-	display: block;
+#mx-form_create_json{
 	margin-top: 20px;
+    display: none;
+    width: 235px;
+    margin: 20px auto;
 }
