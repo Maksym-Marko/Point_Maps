@@ -1,5 +1,6 @@
+<?php header('Content-Type: text/html; charset=utf-8'); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
 		<meta charset="UTF-8">
 		<title>Points on the map</title>
@@ -12,26 +13,24 @@
 			<div class="mx-point" id="mxPoint"></div>
 		</div>
 
-		<form action="/">
-			<div class="mx-points_wrap">
-				<div class="mx-point_1">
-					<div>
-						<span>X</span>
-						<input type="text" id="coordinates_x" value="" disabled>
-					</div>
-					<div>
-						<span>Y</span>
-						<input type="text" id="coordinates_y" value="" disabled>
-					</div>
+		<div class="mx-points_wrap">
+			<div class="mx-point_1">
+				<div>
+					<span>X</span>
+					<input type="text" id="coordinates_x" value="" disabled>
 				</div>
-				<!--  -->
+				<div>
+					<span>Y</span>
+					<input type="text" id="coordinates_y" value="" disabled>
+				</div>
 			</div>
+		</div>
 			
-		</form>
 		<span id="mxSaveJSON">Сохранить</span>
-		<form method="post" action="" id="mx-form_create_json">
-			<input type="text" name="jsondata" id="mxJSONData" value="" /> <br>
-			<input type="submit" name="createjson" id="mxCreateJSONFile" value="Создать JSON файл" />
+
+		<form method="post" action="createjson.php" id="mx-form_create_json">
+			<input type="hidden" name="jsondata" id="mxJSONData" value="" /> <br>
+			<input type="submit" name="createjson" id="mxCreateJSONFile" value="Создать JSON-файл" />
 			<input type="reset" id="mxResetJSON" value="Отменить" />
 		</form>
 
