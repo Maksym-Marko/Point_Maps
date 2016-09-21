@@ -96,6 +96,8 @@ var view = {
 		formCreateJSON.style.display = 'block';
 		document.body.scrollTop = heightBody + 100;
 
+		alert( 'Информация преобразована в JSON-формат. Теперь вы можете создать файл JSON' );
+
 	},
 
 	// Clean tetxtarea
@@ -280,7 +282,7 @@ function start(){
 	};
 
 	// Enter press
-	document.onkeydown = function(e){
+	document.onkeydown = function( e ){
 
 		var keyC = e.keyCode,
 			mxPopupSaveDisplay = getComputedStyle(mxPopupSave[0], null).getPropertyValue( 'display' );

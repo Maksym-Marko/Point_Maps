@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 
 class CreateJSON{
 
@@ -14,21 +15,44 @@ class CreateJSON{
 
 	function OpenJSONfile( $JSONfile, $JSONdata ){
 
-		$this->JSONdata = $JSONdata;
-
 		$openJSONfile = fopen( $JSONfile, 'a' );
 		$addJSONdata = fwrite( $openJSONfile, $JSONdata );
 		fclose( $openJSONfile );
 
 	}
 
-}
+} ?>
 
-$createJSONdata = new CreateJSON;
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Create json</title>
+	</head>
+	<body>
 
-$JSONfile = 'JSON/data.json';
-$JSONdata = '';
+		<?php
+		if( isset( $_POST['createjson'] ) ):
 
-$createJSONdata->InspectionFile( $JSONfile );
-$createJSONdata->OpenJSONfile( $JSONfile, $JSONdata );
+			$JSONfile = 'JSON/data.json';
+			$JSONdata = $_POST['jsondata'];
 
+			$createJSONdata = new CreateJSON;
+
+			$createJSONdata->InspectionFile( $JSONfile );
+			$createJSONdata->OpenJSONfile( $JSONfile, $JSONdata );
+
+			echo '<h1>Файл JSON создано. Расположение: "' . $JSONfile . '". ВНИМАНИЕ! При следующим сохранении, файл будет перезаписан.</h1>';
+
+			echo "
+				<script>
+					window.onload = function(){
+						setTimeout( function(){ window.location.href = 'index.php'; }, 5000 );
+					};
+				</script>
+			";
+
+		endif;
+		?>
+
+	</body>
+</html>
