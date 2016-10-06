@@ -1,5 +1,71 @@
 /* =============================
-*       Style interface 
+*         Main settings
+==============================*/
+
+#mx-download-page{
+	position: absolute;
+	width: 100px;
+	left: 50%;
+	top: 100px;
+	margin-left: -50px;
+}
+
+/* navigation */
+#mx-navigation{
+	position: absolute;
+	left: 50%;
+	margin-left: -150px;
+	top: 50%;
+	margin-top: -100px;
+	width: 300px;
+	padding: 40px 0px;
+	text-align: center;
+	background-color: #999;
+}
+#mx-navigation ul{
+	margin: 0px;
+	padding: 0px;
+}
+#mx-navigation ul li{
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+#mx-navigation ul li a{
+	display: block;
+	text-decoration: none;
+	padding: 10px 0px;
+	margin: 1px 0px;
+	color: #333;
+}
+#mx-navigation ul li a:hover{
+	background-color: #333;
+	color: #fff;
+}
+.mx-navigation_active#mx-navigation{
+	position: relative;
+	display: table;
+	left: 0%;
+	top: 0%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-color: #999;
+}
+.mx-navigation_active#mx-navigation ul li{
+	float: left;
+}
+.mx-navigation_active#mx-navigation ul li a{
+	padding: 10px;
+	margin: 0px;
+}
+.activeLink{
+	background-color: #333;
+	color: #fff !important;
+}
+
+/* =============================
+*     The field with the map
 ==============================*/
 
 /* Map */

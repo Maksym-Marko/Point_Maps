@@ -7,45 +7,32 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-
-		<div class="mx-map_wrap" id="mapField">
-			<img src="maps/map1.jpg" alt="">
-			<div class="mx-point" id="mxPoint"></div>
+		<div id="mx-download-page" style="display: none;">DOWNLOAD...</div>
+		
+		<div id="mx-upload_nav">
+			<nav id="mx-navigation">
+				<ul>
+					<li>
+						<a href="#" id="startPage">Главная</a>
+					</li>
+					<li>
+						<a href="#" id="createMap">Создать карту</a>
+					</li>
+					<li>
+						<a href="#" id="readMap">Прочитать карту</a>
+					</li>
+					<li>
+						<a href="#" id="instructions">Инструкция</a>
+					</li>
+				</ul>
+			</nav>
 		</div>
 
-		<div class="mx-points_wrap">
-			<div class="mx-point_1">
-				<div>
-					<span>X</span>
-					<input type="text" id="coordinates_x" value="" disabled>
-				</div>
-				<div>
-					<span>Y</span>
-					<input type="text" id="coordinates_y" value="" disabled>
-				</div>
-			</div>
-		</div>
-			
-		<span id="mxSaveJSON">Сохранить</span>
+		<!-- add -->
+		<div id="mx-upload_area"></div>
+		<!-- add -->	
 
-		<form method="post" action="createjson.php" id="mx-form_create_json">
-			<input type="hidden" name="jsondata" id="mxJSONData" value="" /> <br>
-			<input type="submit" name="createjson" id="mxCreateJSONFile" value="Создать JSON-файл" />
-			<input type="reset" id="mxResetJSON" value="Отменить" />
-		</form>
-
-		<div class="mx-save_point_wrap">
-			<div class="mx-save_point">
-				<h3>Сохранить данную точку?</h3>
-				<textarea id="MxTextSave" placeholder="Введите описание данной точки"></textarea>
-				<div class="mx-save_buttons">
-					<span id="mxNoSave">Нет</span>
-					<span id="mxSave">Да</span>
-				</div>			
-			</div>
-		</div>		
-
-		<script src="PointsMap.js"></script>
+		<script src="add/contr.js"></script>		
 
 	</body>
 </html>
