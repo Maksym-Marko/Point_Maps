@@ -166,3 +166,12 @@ textarea#MxTextSave {
     width: 235px;
     margin: 20px auto;
 }
+
+/* =============================
+*     Download map page
+==============================*/
+.mx-form_map_download{
+	display: block;
+	margin: 40px;
+	text-align: center;
+}
