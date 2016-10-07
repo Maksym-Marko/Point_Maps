@@ -8,6 +8,9 @@
 		Название карты: <input type='text' name='nameMap' id='nameMap' />
 	</p>
 	<p>
+		E-mail ( Введите реальный адрес, на него будет отослан доступ ): <input type='text' name='userEmail' id='userEmail' />
+	</p>
+	<p>
 		<input type='file' name='upload[]' id='upl' class='input' accept="image/*,image/jpeg,image/jpg,image/png,image/gif">
 	</p>
 
