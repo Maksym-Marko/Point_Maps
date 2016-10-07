@@ -66,7 +66,7 @@ UploadstartPage.onclick = function(){
 // upload create map page
 var UploadcreateMap = document.getElementById( 'createMap' );
 UploadcreateMap.onclick = function(){
-	ChangePage( 'createMap' );					
+	ChangePage( 'createMap' );
 	return false;				
 }
 

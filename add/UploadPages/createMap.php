@@ -1,45 +1,19 @@
-<?php
-class DownloadMap{
-
-	public $dir;
-	public $files;
-
-	public function InspectionFile(){
-		$this->files = scandir( $this->dir );
-		if( count( $this->files ) > 0 ){
-			for( $i = 0; $i < count( $this->files ); $i++ ){
-
-				if( $this->files[$i] !== '.' && $this->files[$i] !== ".." ){
-
-				}
-			}
-			echo $this->dir;
-		}
-		else{			
-			echo 'No file';
-		}
-		
-		
-	}
-}
-
-$downClass = new DownloadMap();
-$downClass->dir = '../../maps/';
-$downClass->InspectionFile();
-
-?>
-<form method="post" action="" enctype='multipart/form-data' class="mx-form_map_download">
+<form method="post" action="add/UploadPages/downloadMap/download.php" enctype='multipart/form-data' class="mx-form_map_download">
 	<p>
 		<label class='label' >
-			<span>Карта в формате: .jpg, .gif, .png.</span>
-		</label>
-		<br>
-		<p align="center"><input type='file' name='upload[]' id='upl' class='input' multiple accept="image/*,image/jpeg,image/jpg,image/png,image/gif" size="5"></p>
+			<span>Карта в формате: .jpg, .gif, .png. Не больше 1 мб.</span>
+		</label>		
+	</p>
+	<p>
+		Название карты: <input type='text' name='nameMap' id='nameMap' />
+	</p>
+	<p>
+		<input type='file' name='upload[]' id='upl' class='input' accept="image/*,image/jpeg,image/jpg,image/png,image/gif">
 	</p>
 
 	<input type="hidden" name="date" value="<?php echo time(); ?>"/>
 	
 	<p>	
-		<input type="submit" name="add" value="Загрузить карту" />
+		<input type="submit" name="download" id="downloadId" value="Загрузить карту" />
 	</p>
 </form>

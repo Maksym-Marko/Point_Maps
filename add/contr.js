@@ -11,5 +11,5 @@ function include( jsPath ) {
 }
 
 window.onload = function(){
-	include( 'add/Navigation/nav.js' );
+	include( 'add/Navigation/nav.js' );	
 }
