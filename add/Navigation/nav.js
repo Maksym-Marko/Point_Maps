@@ -7,7 +7,7 @@ var navig = document.getElementById( 'mx-navigation' );
 
 // func upload
 var upPage;
-function UploadPage( pagePath ) {
+function UploadPage( pagePath ){
 	ajax.open( 'GET', pagePath, false );
 	ajax.send( null );
 	if( ajax.status != 200 ){
@@ -32,7 +32,7 @@ function ChangePage( pageUpload ){
 			if( opacity <= 0 ){
 				clearInterval( intervalOpacity );
 				opacity = 1;
-				navig.className = 'mx-navigation_active';							
+				navig.className = 'mx-navigation_active';
 				navig.style.opacity = opacity;
 			}
 		},100 );
@@ -53,13 +53,14 @@ function ChangePage( pageUpload ){
 		}
 		
 		varPageUpload.className = 'activeLink';
-	}					
+	}
 }
 
 // upload home
 var UploadstartPage = document.getElementById( 'startPage' );	
 UploadstartPage.onclick = function(){
 	ChangePage( 'startPage' );
+	includeJS( false );
 	return false;
 }
 
@@ -67,19 +68,23 @@ UploadstartPage.onclick = function(){
 var UploadcreateMap = document.getElementById( 'createMap' );
 UploadcreateMap.onclick = function(){
 	ChangePage( 'createMap' );
-	return false;				
+	includeJS( false );	
+	return false;
 }
 
 // upload read map page
 var UploadreadMap = document.getElementById( 'readMap' );
 UploadreadMap.onclick = function(){
-	ChangePage( 'readMap' );					
-	return false;				
+	ChangePage( 'readMap' );
+	//includeJS( true, 'add/CreatePoints/access.js' );
+	includeJS( true, 'add/CreatePoints/PointsMap.js' );
+	return false;
 }
 
 // upload instructions
 var Uploadinstructions = document.getElementById( 'instructions' );
 Uploadinstructions.onclick = function(){
-	ChangePage( 'instructions' );					
-	return false;				
+	ChangePage( 'instructions' );
+	includeJS( false );
+	return false;
 }

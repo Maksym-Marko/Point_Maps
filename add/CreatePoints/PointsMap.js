@@ -1,6 +1,57 @@
+/* -------------------------------- begin access ------------------------------------- */
+var
+	addMap = document.getElementById( 'addMap' ),
+	access = document.getElementById( 'access' ),
+	infoErrorWind = document.getElementById( 'infoError' ),
+	fileldWrap = document.getElementById( 'mx-fileld_wrap' ),
+	accessWrap = document.getElementById( 'mx-access_wrap' );
+	imgMap = document.getElementById( 'imgMap' );
+
+fileldWrap.style.display = 'none';
+
+// Lile exists
+var exs = true;
+function fileEx( filePath ){
+	ajax.open( 'GET', filePath, false );
+	ajax.send( null );	
+	if( ajax.status != 200 ){
+		// alert( 'File "' + filePath + '", Not Found!' );
+		exs = false;
+	} else{
+		exs = true;
+	}
+}
+
+function GetAccess(){
+	accessVal = access.value;
+	accessPass = 'maps/' + accessVal;	
+	
+	var arr = [ '.jpg', '.png', '.gif' ];
+	var infoError = '';
+	for( var f = 0; f < arr.length; f++ ){
+		fileEx( accessPass + arr[f] );
+		if( exs == false ){
+			infoError = 'Неверный код!';
+		} else{
+			imgMap.setAttribute( 'src', accessPass + arr[f] );
+			fileldWrap.style.display = 'block';
+			accessWrap.style.display = 'none';
+			infoError = '';
+			break;
+		}
+		//console.log( accessPass + arr[f] );
+	}
+
+	infoErrorWind.innerHTML = infoError;
+}
+
+/* -------------------------------- end access ------------------------------------- */
+
+
 var mapField = document.getElementById( 'mapField' ),
 	mxPopupSave = document.getElementsByClassName( 'mx-save_point_wrap' ),
-	mxTextSave = document.getElementById( 'MxTextSave' );
+	mxTextSave = document.getElementById( 'MxTextSave' ),
+	JSONFile;
 
 /* -------------------------------- begin add methods ------------------------------------- */
 
@@ -124,6 +175,34 @@ var view = {
 
 var model = {
 
+	// Get JSONData
+	getJSONFile: function( pagePath ){
+
+		ajax.open( 'GET', pagePath, false );
+		ajax.send( null );
+		if( ajax.status != 200 ){
+			alert( 'File "' + pagePath + '", Not Found!' );
+		} else{
+			JSONFile = ajax.responseText;			
+		}
+
+	},
+
+	GetJSONData: function(){		
+		if( exs == true ){
+			model.getJSONFile( 'json/' + access.value + '.json' );
+			getJSONObj = JSON.parse( JSONFile );
+
+			// get lengh Coordinates
+			coordLength = Object.getOwnPropertyNames( getJSONObj.Coordinates ).length;
+			//console.log( coordLength );		
+			return{
+				coordLength: coordLength,
+				getJSONObj: getJSONObj
+			}	
+		}			
+	},
+
 	// Get position point
 	getPositionPoint: function( mxMap, event ){
 
@@ -185,6 +264,27 @@ var model = {
 /* --------------------------- begin controller ---------------------------------------- */
 
 var controller = {
+
+	// Get data JSON
+	GetJSONDataContr: function(){	
+		GetAccess();
+		setTimeout( function(){
+			var leng = model.GetJSONData();
+
+			for( var l=0; l<leng.coordLength; l++ ){
+				dataPointId = 'dataPointId' + l
+				//console.log( leng.getJSONObj.Coordinates[dataPointId].id );
+				newPointId = leng.getJSONObj.Coordinates[dataPointId].id;
+				newPointPosX = leng.getJSONObj.Coordinates[dataPointId].PosX;
+				newPointPosY = leng.getJSONObj.Coordinates[dataPointId].PosY;
+				newPointDesription = leng.getJSONObj.Coordinates[dataPointId].Desription;
+
+				view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
+			}
+
+			//console.log( leng.coordLength );	
+		},1000);			
+	},
 
 	getCoordinatesPoint: function(){
 
@@ -261,6 +361,10 @@ var controller = {
 /* ---------------------------- end controller ----------------------------------------- */
 
 function start(){
+
+	addMap.onclick = function(){
+		controller.GetJSONDataContr();
+	}
 	
 	// Click on field
 	mapField.onclick = function(){
