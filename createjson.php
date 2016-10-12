@@ -3,7 +3,11 @@ header('Content-Type: text/html; charset=utf-8');
 
 class CreateJSON{
 
-	function InspectionFile( $JSONfile ){
+	public $nameMap;
+	public $accessJSON;
+	public $userEmail;
+
+	public function InspectionFile( $JSONfile ){
 
 		if( file_exists( $JSONfile ) ):
 
@@ -14,11 +18,26 @@ class CreateJSON{
 
 	}
 
-	function OpenJSONfile( $JSONfile, $JSONdata ){
+	public function OpenJSONfile( $JSONfile, $JSONdata ){
 
 		$openJSONfile = fopen( $JSONfile, 'w+' );
 		$addJSONdata = fwrite( $openJSONfile, $JSONdata );
 		fclose( $openJSONfile );
+
+	}
+
+	public function SendMail(){
+		
+		$subject = 'Карта обновлена';
+		$message = 'Ваша карта с названием "' . $this->nameMap . '" обновлена. Вы можете отправить этот код - "' . $this->accessJSON . '" другу, и он сможет посмотреть на места отмеченые Вами на нашем сайте, в разделе <a href="http://PointsMap.com">"Прочитать карту"</a>.<br>
+			Инструкция пользователя, находится на сайте.<br>
+			Успешной работы.
+		';
+
+		$headers = 'Content-type:text/html;charset=utf-8' . "\r\n";
+		$headers .= 'From: PointsMap <support@PointsMap.com>' . "\r\n";	
+		
+		mail( $this->userEmail, $subject, $message, $headers );
 
 	}
 
@@ -34,23 +53,23 @@ class CreateJSON{
 		<?php
 		if( isset( $_POST['createjson'] ) ):
 
-			$JSONfile = 'json/data.json';
+			$JSONfile = 'json/' . $_POST['nameFile'] . '.json';
 			$JSONdata = $_POST['jsondata'];
 
 			$createJSONdata = new CreateJSON;
 
+			$createJSONdata->nameMap = $_POST['nameMap'];
+			$createJSONdata->accessJSON = $_POST['nameFile'];
+			$createJSONdata->userEmail = $_POST['userEmail'];
+
 			$createJSONdata->InspectionFile( $JSONfile );
 			$createJSONdata->OpenJSONfile( $JSONfile, $JSONdata );
 
-			echo '<h1>Файл JSON создано. Расположение: "' . $JSONfile . '". ВНИМАНИЕ! При следующим сохранении, файл будет перезаписан.</h1>';
+			$createJSONdata->SendMail();
 
-			echo "
-				<script>
-					window.onload = function(){
-						setTimeout( function(){ window.location.href = 'index.php'; }, 5000 );
-					};
-				</script>
-			";
+			echo '<h3>Карта обновлена. Вы можете отправить этот код - "' . $_POST['nameFile'] . '" другу, и он сможет посмотреть на места отмеченые Вами на нашем сайте, в разделе "Прочитать карту".</h3>';
+
+			echo '<a href="' . $_SERVER['HTTP_REFERER'] . '">Перейти на сайт</a>';
 
 		endif;
 		?>

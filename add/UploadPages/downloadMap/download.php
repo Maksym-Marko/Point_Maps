@@ -44,7 +44,8 @@ class DownloadMap{
 	}
 
 	/* Download */
-	public function Download(){			
+	public function Download(){
+				
 		$this->Validator();
 
 		$this->uploadPath = $this->dir . $this->newNameFile;
@@ -54,7 +55,8 @@ class DownloadMap{
     		//echo 'Upload';
     	else:
     		exit( 'Произошла ошибка' );
-    	endif;	 	
+    	endif;
+
 	}
 
 	/* Create JSON */
@@ -68,7 +70,7 @@ class DownloadMap{
 			
 		endif;
 
-		$this->JSONdata = '{"MapName":"' . $this->nameMap . '","Date":' . $this->date . ',"UserEmail":"' . $this->userEmail . '","Coordinates":{}}';
+		$this->JSONdata = '{"MapName":"' . $this->nameMap . '","Date":' . $this->date . ',"UserEmail":"' . $this->userEmail . '","Coordinates":{"dataPointId0":{"id":"mxPoint0","PosX":-186,"PosY":-327,"Desription":"Start point"}}}';
 		$openJSONfile = fopen( $this->JSONfile, 'w+' );
 		$addJSONdata = fwrite( $openJSONfile, $this->JSONdata );
 		fclose( $openJSONfile );
@@ -78,9 +80,10 @@ class DownloadMap{
 	public function SendMail(){
 		
 		$subject = 'Вы загрузили карту на нашем сайте';
-		$message = 'Вы загрузили карту на нашем сайте. Карта с названием ' . $this->nameMap . ' будет доступна по адресу <a href="http://PointsMap.com">http://PointsMap.com</a>. <br>
+		$message = 'Вы загрузили карту на нашем сайте. Карта с названием "' . $this->nameMap . '" будет доступна по адресу <a href="http://PointsMap.com">http://PointsMap.com</a>. <br>
 			В поле доступа, введите данный код - ' . $this->date . '.<br>
-			Инструкция пользователя, находится на сайте. Успешной работы.
+			Инструкция пользователя, находится на сайте.<br>
+			Успешной работы.
 		';
 
 		$headers = 'Content-type:text/html;charset=utf-8' . "\r\n";
@@ -88,7 +91,7 @@ class DownloadMap{
 		
 		mail( $this->userEmail, $subject, $message, $headers );
 
-		echo '<a href="' . $_SERVER['HTTP_REFERER'] . '">Перейти на сайт</a>';
+		echo 'Карта загружена. Доступ отправлен Вам на почту. <a href="' . $_SERVER['HTTP_REFERER'] . '">Перейти на сайт</a>';
 	}
 
 }

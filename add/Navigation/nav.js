@@ -18,8 +18,7 @@ function UploadPage( pagePath ){
 		setTimeout( function(){
 			dowlPage.style.display = 'none';
 		}, 500 );
-			upPage = ajax.responseText;
-		
+			upPage = ajax.responseText;		
 	}
 }
 

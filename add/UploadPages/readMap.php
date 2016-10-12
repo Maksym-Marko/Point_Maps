@@ -30,8 +30,13 @@
 	<span id="mxSaveJSON">Сохранить</span>
 
 	<form method="post" action="createjson.php" id="mx-form_create_json">
-		<input type="hidden" name="jsondata" id="mxJSONData" value="" /> <br>
-		<input type="submit" name="createjson" id="mxCreateJSONFile" value="Создать JSON-файл" />
+		<input type="hidden" name="jsondata" id="mxJSONData" value="" />
+		<input type="hidden" name="nameFile" id="nameFile" value="" />
+		<input type="hidden" name="nameMap" id="nameMap" value="" />
+		<input type="hidden" name="userEmail" id="userEmail" value="" />
+
+		<br>
+		<input type="submit" name="createjson" id="mxCreateJSONFile" value="Обновить карту" />
 		<input type="reset" id="mxResetJSON" value="Отменить" />
 	</form>
 

@@ -4,7 +4,7 @@ var
 	access = document.getElementById( 'access' ),
 	infoErrorWind = document.getElementById( 'infoError' ),
 	fileldWrap = document.getElementById( 'mx-fileld_wrap' ),
-	accessWrap = document.getElementById( 'mx-access_wrap' );
+	accessWrap = document.getElementById( 'mx-access_wrap' ),
 	imgMap = document.getElementById( 'imgMap' );
 
 fileldWrap.style.display = 'none';
@@ -39,7 +39,6 @@ function GetAccess(){
 			infoError = '';
 			break;
 		}
-		//console.log( accessPass + arr[f] );
 	}
 
 	infoErrorWind.innerHTML = infoError;
@@ -56,11 +55,12 @@ var mapField = document.getElementById( 'mapField' ),
 /* -------------------------------- begin add methods ------------------------------------- */
 
 var addMethods = {	
-	arrayPointers: [],
 	correctPosition: 7
 };
 
-var JSONData = {};
+// JSON Object
+var getJSONObj = {},
+	coordLength;
 
 /* -------------------------------- end add methods ------------------------------------- */
 
@@ -96,6 +96,7 @@ var view = {
 		return{
 			poupDisplay: mxPopupSave[0].style.display
 		}
+
 	},
 
 	// Create new points
@@ -127,8 +128,10 @@ var view = {
 		var	Point = document.getElementById( 'mxPoint' );
 		Point.style.left = '-100px';
 
-		// remove from the array
-		addMethods.arrayPointers.pop();
+		// remove from the JSON
+		var dataPointId = 'dataPointId' + coordLength;
+
+		delete getJSONObj.Coordinates[dataPointId];
 
 	},
 
@@ -147,7 +150,7 @@ var view = {
 		formCreateJSON.style.display = 'block';
 		document.body.scrollTop = heightBody + 100;
 
-		alert( 'Информация преобразована в JSON-формат. Теперь вы можете создать файл JSON' );
+		alert( 'Информация сохранена. Теперь вы можете обновить карту' );
 
 	},
 
@@ -188,19 +191,21 @@ var model = {
 
 	},
 
-	GetJSONData: function(){		
+	GetJSONData: function(){
+
 		if( exs == true ){
 			model.getJSONFile( 'json/' + access.value + '.json' );
 			getJSONObj = JSON.parse( JSONFile );
 
 			// get lengh Coordinates
 			coordLength = Object.getOwnPropertyNames( getJSONObj.Coordinates ).length;
-			//console.log( coordLength );		
+					
 			return{
 				coordLength: coordLength,
 				getJSONObj: getJSONObj
 			}	
-		}			
+		}
+
 	},
 
 	// Get position point
@@ -215,44 +220,35 @@ var model = {
 
 	},
 
-	// Create id for point
-	createIdFromPoint: function(){
-
-		var numberId = addMethods.arrayPointers.length;
-			
-		return{				
-			saveId: ('mxPoint' + numberId)
-		};
-
-	},
-
 	// Push Coordinates In Array
-	pushCoordinatesInArray: function( saveId, saveX, saveY, descriptionPoint ){
+	pushCoordinatesInArray: function( saveX, saveY, descriptionPoint ){
 
-		var setArray = [saveId, saveX, saveY, descriptionPoint];
-
-		addMethods.arrayPointers.push(setArray);		
+		//var countCoord = leng.coordLength;
+		dataPointId = 'dataPointId' + coordLength;
+		saveId = 'mxPoint' + coordLength
+		getJSONObj.Coordinates[dataPointId] = {
+			'id': saveId,
+			'PosX': saveX,
+			'PosY': saveY,
+			'Desription': descriptionPoint
+		};
 
 	},
 
 	// Save in JSON
 	dataPointsJSON: function(){
+		
+		var nameFile = document.getElementById( 'nameFile' );
+			nameFile.value = getJSONObj.Date;
 
-		var arrayPointersData = addMethods.arrayPointers;
+		var nameMap = document.getElementById( 'nameMap' );
+			nameMap.value = getJSONObj.MapName;
 
-		for( var i = 0; i < arrayPointersData.length; i++ ){
-
-			idPoint = arrayPointersData[i][0];
-			PosXPoint = arrayPointersData[i][1];
-			PosYPoint = arrayPointersData[i][2];
-			DesriptionPoint = arrayPointersData[i][3];
-
-			dataPointId = 'dataPointId' + i;
-			JSONData[dataPointId] = { 'id': idPoint, 'PosX': PosXPoint, 'PosY': PosYPoint, 'Desription': DesriptionPoint };
-		}
+		var userEmail = document.getElementById( 'userEmail' );
+			userEmail.value = getJSONObj.UserEmail;
 
 		var inputJSONData = document.getElementById( 'mxJSONData' );
-			inputJSONData.value = JSON.stringify(JSONData);
+			inputJSONData.value = JSON.stringify( getJSONObj );
 
 	}
 	
@@ -266,12 +262,13 @@ var model = {
 var controller = {
 
 	// Get data JSON
-	GetJSONDataContr: function(){	
+	GetJSONDataContr: function(){
+
 		GetAccess();
 		setTimeout( function(){
 			var leng = model.GetJSONData();
 
-			for( var l=0; l<leng.coordLength; l++ ){
+			for( var l=0; l<coordLength; l++ ){
 				dataPointId = 'dataPointId' + l
 				//console.log( leng.getJSONObj.Coordinates[dataPointId].id );
 				newPointId = leng.getJSONObj.Coordinates[dataPointId].id;
@@ -281,9 +278,9 @@ var controller = {
 
 				view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
 			}
+			
+		},1000);
 
-			//console.log( leng.coordLength );	
-		},1000);			
 	},
 
 	getCoordinatesPoint: function(){
@@ -318,32 +315,29 @@ var controller = {
 		point = model.getPositionPoint( mapField, event );
 		saveX = point.pointPosX;
 		saveY = point.pointPosY;
-
-		createNewId = model.createIdFromPoint();
-		saveId = createNewId.saveId;
 		descriptionPoint = '';
 	
-		model.pushCoordinatesInArray( saveId, saveX, saveY, descriptionPoint );
+		model.pushCoordinatesInArray( saveX, saveY, descriptionPoint );
+		
+		//console.log( getJSONObj );
 
 	},
 
 	// Attachment points
 	attachmentPoints: function(){
 
-		var getNumberFromArray = addMethods.arrayPointers.length;
-		getNumberFromArray -= 1;
-
 		// push description in array
 		if( mxTextSave.value == '' ){
 			mxTextSave.value = 'Нет описания';
 		}
-		addMethods.arrayPointers[getNumberFromArray][3] = mxTextSave.value;
+		dataPointId = 'dataPointId' + coordLength;
+		
+		getJSONObj.Coordinates[dataPointId].Desription = mxTextSave.value;
 
-		// get from array and set in element attribute
-		newPointId = addMethods.arrayPointers[getNumberFromArray][0];
-		newPointPosX = addMethods.arrayPointers[getNumberFromArray][1];
-		newPointPosY = addMethods.arrayPointers[getNumberFromArray][2];
-		newPointDesription = addMethods.arrayPointers[getNumberFromArray][3];
+		newPointId = getJSONObj.Coordinates[dataPointId].id;
+		newPointPosX = getJSONObj.Coordinates[dataPointId].PosX;
+		newPointPosY = getJSONObj.Coordinates[dataPointId].PosY;
+		newPointDesription = getJSONObj.Coordinates[dataPointId].Desription;
 
 		// create point
 		view.createNewPoint( newPointId, newPointPosX, newPointPosY, newPointDesription );
@@ -353,6 +347,8 @@ var controller = {
 
 		// clear textarea
 		view.clearTextArea();
+
+		coordLength++;
 
 	}
 
@@ -369,11 +365,13 @@ function start(){
 	// Click on field
 	mapField.onclick = function(){
 
-		controller.getCoordinatesPoint();
-		controller.setCoordinatesPointInMap();
+		if( coordLength ){
+			controller.getCoordinatesPoint();
+			controller.setCoordinatesPointInMap();
 
-		// get and push Coordinates In Array Contr
-		controller.getAndPushCoordinates();	
+			// get and push Coordinates In Array Contr
+			controller.getAndPushCoordinates();	
+		}		
 		
 	};			
 
